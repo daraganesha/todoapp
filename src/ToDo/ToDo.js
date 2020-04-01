@@ -6,11 +6,12 @@ export default class ToDo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      todos: [],
+      displayedTodos: [],
+      todos: [], // bisa dibuang
       newItem: "",
       dones: []
     };
-    console.log('hey dar');
+    this.todoItems = [];
   }
 
   handleClickAdd() {
@@ -19,6 +20,8 @@ export default class ToDo extends React.Component {
     item.strike = false;
     oldTodos.push(item);
     this.setState({ ...this.state, todos: oldTodos });
+    // frans:
+    this.todoItems.push({todoItem: this.state.newItem, checked: false});
   }
 
   strikeItem(index) {
@@ -26,7 +29,11 @@ export default class ToDo extends React.Component {
     const tempTodos = this.state.todos;
     const item = tempTodos[index];
     item.strike = true;
-    this.setState({ ...this.state, todos: tempTodos });
+    // this.setState({ ...this.state, todos: tempTodos });
+    
+    //frans:
+    this.todoItems[index].checked = true; // ini kan ga setstate, jadi boleh
+    this.setState({...this.state, displayedTodos: this.todoItems}); 
   }
 
   handleClickFilter() {
@@ -37,10 +44,12 @@ export default class ToDo extends React.Component {
   }
 
   handleClickOnlyTodos() {
-    this.setState({ ...this.state, filterAll: false });
+    // this.setState({ ...this.state, filterAll: false });
+    this.setState({displayedTodos: this.todoItems.filter(item => item.strike)});
   }
   handleClickShowAll() {
-    this.setState({ ...this.state, filterAll: true });
+    // this.setState({ ...this.state, filterAll: true });
+    this.setState({displayedTodos: this.todoItems});
   }
   inputNewItem(e) {
     const input = e.target.value;
@@ -71,6 +80,15 @@ export default class ToDo extends React.Component {
         <h3>Erledigte Aufgaben</h3>
         {this.state.dones.map(item => (
           <p>{item.todoItem}</p>
+        ))}
+
+       <h3>Todos</h3>
+       {this.state.displayedTodos.map((item, index) => (
+          <ToDoItem
+            text={item.todoItem}
+            checked={item.strike}
+            striked={() => this.strikeItem(index)}
+          />
         ))}
       </div>
     );
