@@ -10,6 +10,7 @@ export default class ToDo extends React.Component {
       newItem: "",
       dones: []
     };
+    console.log('hey dar');
   }
 
   handleClickAdd() {
